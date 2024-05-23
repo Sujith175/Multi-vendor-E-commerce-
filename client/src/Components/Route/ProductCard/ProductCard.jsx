@@ -64,6 +64,7 @@ const ProductCard = ({ data }) => {
             />
             <AiOutlineStar className="mr-2 cursor-pointer" color="#F6BA00" />
           </div>
+          
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
               <h5 className={`${styles.productDiscountPrice}`}>

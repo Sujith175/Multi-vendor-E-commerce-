@@ -35,10 +35,13 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       name: name,
       email: email,
       password: password,
-      avatar: fileUrl,
+      avatar: {
+        public_id: fileUrl,
+        url: fileUrl,
+      },
     };
+    
     const activationToken = createActivationToken(user);
-
     const activationUrl = `http://localhost:5173/activation/${activationToken}`;
 
     try {
@@ -67,7 +70,6 @@ const createActivationToken = (user) => {
 };
 
 //activate user message
-
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
@@ -77,6 +79,7 @@ router.post(
         activation_token,
         process.env.ACTIVATION_SECRET
       );
+
       if (!newUser) {
         return next(new ErrorHandler("Invalid Token", 400));
       }
@@ -91,6 +94,7 @@ router.post(
 
       user = await User.create({ name, email, password, avatar });
       sendToken(user, 201, res);
+      
     } catch (err) {
       return next(new ErrorHandler(err.message, 500));
     }
@@ -98,7 +102,6 @@ router.post(
 );
 
 //login function
-
 router.post(
   "/login-user",
   catchAsyncErrors(async (req, res, next) => {
@@ -124,7 +127,6 @@ router.post(
 );
 
 //load user
-
 router.get(
   "/getuser",
   isAuthenticated,
@@ -141,6 +143,28 @@ router.get(
       });
     } catch (err) {
       return next(new ErrorHandler(err.message, 500));
+    }
+  })
+);
+
+//logout user
+
+router.get(
+  "/logout",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Logout Successful!",
+      });
+    } catch (err) {
+      return next(Error(err.message, 500));
     }
   })
 );

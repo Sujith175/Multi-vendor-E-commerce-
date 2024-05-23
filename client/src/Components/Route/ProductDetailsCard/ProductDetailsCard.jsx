@@ -71,7 +71,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     Send Message <AiOutlineMessage className="ml-1" />
                   </span>
                 </div>
-                
+
                 <h5 className="text-[16px] text-[red] mt-5">
                   {data.total_sell} Sold out
                 </h5>

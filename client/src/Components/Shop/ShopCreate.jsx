@@ -1,45 +1,51 @@
 import React, { useState } from "react";
 import styles from "../../Styles/styles.js";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import axios from "axios";
-import { RxAvatar } from "react-icons/rx";
-import { Link, useNavigate } from "react-router-dom";
-import { server } from "../../server.js";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../server.js";
+import { RxAvatar } from "react-icons/rx";
 
-const Signup = () => {
+const ShopCreate = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [shopName, setShopName] = useState("");
+  const [phone, setPhone] = useState();
+  const [address, setAddress] = useState("");
+  const [zipCode, setZipCode] = useState();
+  const [avatar, setAvatar] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const [avatar, setAvatar] = useState(null);
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
     const newForm = new FormData();
     newForm.append("file", avatar);
-    newForm.append("name", name);
+    newForm.append("name", shopName);
     newForm.append("email", email);
     newForm.append("password", password);
+    newForm.append("zipCode", zipCode);
+    newForm.append("address", address);
+    newForm.append("phoneNumber", phone);
+
     console.log(newForm);
 
     axios
-      .post(`${server}/create-user`, newForm, config)
+      .post(`${server}/seller/create-shop`, newForm, config)
       .then((res) => {
         toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
         setAvatar();
+        setAddress("");
+        setPhone();
+        setZipCode();
         console.log("success");
       })
       .catch((err) => {
@@ -48,35 +54,39 @@ const Signup = () => {
       });
   };
 
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(file);
+  };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a New User
+          Register as a Seller
         </h2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
-                htmlFor="name"
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Full Name
+                Shop Name
               </label>
               <div className="mt-1">
                 <input
                   className="appearance-none block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm
                    placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  type="text"
-                  name="text"
-                  autoComplete="name"
+                  type="name"
+                  name="name"
+                  autoComplete="email"
                   required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Full Name"
+                  value={shopName}
+                  onChange={(e) => setShopName(e.target.value)}
+                  placeholder="Shop Name"
                 />
               </div>
             </div>
@@ -86,7 +96,7 @@ const Signup = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email Address
+                Email
               </label>
               <div className="mt-1">
                 <input
@@ -105,6 +115,72 @@ const Signup = () => {
 
             <div>
               <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number
+              </label>
+              <div className="mt-1">
+                <input
+                  className="appearance-none block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm
+                   placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  type="phone-number"
+                  name="phone"
+                  autoComplete="phone"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Phone"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Address
+              </label>
+              <div className="mt-1">
+                <input
+                  className="appearance-none block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm
+                   placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  type="text"
+                  name="Address"
+                  autoComplete="Address"
+                  required
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Address"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                ZipCode
+              </label>
+              <div className="mt-1">
+                <input
+                  className="appearance-none block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm
+                   placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  type="number"
+                  name="zipcode"
+                  autoComplete="zipcode"
+                  required
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  placeholder="Zip Code"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
                 htmlFor="Password"
                 className="block text-sm font-medium text-gray-700"
               >
@@ -115,7 +191,7 @@ const Signup = () => {
                   className="appearance-none block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm
                    placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   type={visible ? "text" : "password"}
-                  name="email"
+                  name="password"
                   autoComplete="current-password"
                   required
                   value={password}
@@ -142,7 +218,9 @@ const Signup = () => {
               <label
                 htmlFor="avatar"
                 className="block text-sm font-medium text-gray-700"
-              ></label>
+              >
+                Upload Profile Picture
+              </label>
               <div className="mt-2 flex items-center">
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
@@ -171,7 +249,22 @@ const Signup = () => {
                 </label>
               </div>
             </div>
-
+            <div className={`${styles.normalFlex} justify-between`}>
+              <div className={`${styles.normalFlex}`}>
+                <input
+                  type="checkbox"
+                  name="remember-me"
+                  id="remember-me"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-900"
+                >
+                  Remember Me
+                </label>
+              </div>
+            </div>
             <div>
               <button
                 type="submit"
@@ -182,7 +275,7 @@ const Signup = () => {
               </button>
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4>Already have any account?</h4>
+              <h4>Already Have an Account?</h4>
               <Link to="/login" className="text-blue-600 pl-2">
                 Login
               </Link>
@@ -194,4 +287,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default ShopCreate;

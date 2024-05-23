@@ -15,6 +15,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use("/", express.static("uploads"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -27,8 +28,9 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 
 //routes import
 const user = require("./Controller/User");
+const shop = require("./Controller/shop");
 app.use("/api/v2", user);
-
+app.use("/api/v2/seller", shop);
 //for error handling
 app.use(ErrorHanler);
 

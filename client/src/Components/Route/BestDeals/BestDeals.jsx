@@ -10,6 +10,7 @@ const BestDeals = () => {
     const firstFive = d.slice(0, 5);
     setData(firstFive);
   }, []);
+
   return (
     <div>
       <div className={`${styles.section}`}>
